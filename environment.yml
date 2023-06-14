@@ -1,0 +1,12 @@
+name: dmiaqa
+channels:
+  - defaults
+  - pytorch
+dependencies:
+  - python=3.10
+  - pytorch
+  - flask
+  - conda-forge::waitress
+  - conda-forge::sentence-transformers
+  - torchvision
+prefix: /Users/daniel/miniconda3/envs/dmia_qa
