@@ -33,3 +33,9 @@ The application returns the answer to the most similar predefined question (HTTP
 
 - 400 BAD REQUEST: The input is too short (minimum of four words).
 - 501 NOT IMPLEMENTED: There was no question found which was similar enough to the user input
+
+## Open issues
+
+- [ ] Initially, a multi-model voting system was implemented. However, it was changed to using only the output of the first model.
+- [ ] Improve method of determining if found questions are similar enough- right now, the first (== best) result of the collection.query method just needs to be below a cosing distance of 0.7.
+- [ ] When aggregating the most common answer within the results, an exact string match is carried out. This might lead to errors when answers are not completetly identical.
