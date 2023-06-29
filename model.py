@@ -3,7 +3,6 @@ import chromadb
 import Question
 import load_data
 from collections import Counter
-import logging
 
 
 class Model:
@@ -17,12 +16,19 @@ class Model:
         for model_name, model in self.models:
             collection = self.__compute_store_embeddings(model_name, model)
             self.collections.append(collection)
-        logging.info("Model initialized - ready for prediction.")
+        print("Model initialized - ready for prediction.")
 
     def predict(self, text):
-        result = self.__compute_similarities(text)
-        print(result)
-        return self.__answer_max_vote(result)
+        input_lenth = len(text.split())
+        if input_lenth < 4:
+            raise ValueError()
+        raw_result = self.__compute_similarities(text)
+        print(raw_result)
+        if not self.__results_have_enough_similarity(raw_result):
+            print("not enough similarity")
+            raise NotImplementedError()
+        result = self.__answer_max_vote(raw_result)
+        return result
 
     def initialize_models(self):
         for model_name in self.model_names:
@@ -101,3 +107,11 @@ class Model:
         attribute_counts = Counter(attribute_values)
         most_common_attribute = attribute_counts.most_common(1)[0][0]
         return most_common_attribute
+
+    @staticmethod
+    def __results_have_enough_similarity(raw_result):
+        has_enough_similarity = True
+        distances = raw_result["distances"]
+        if min(distances) > 0.7:
+            has_enough_similarity = False
+        return has_enough_similarity
