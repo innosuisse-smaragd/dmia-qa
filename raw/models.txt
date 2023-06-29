@@ -1,2 +1,1 @@
 deutsche-telekom/gbert-large-paraphrase-cosine
-T-Systems-onsite/cross-en-de-roberta-sentence-transformer

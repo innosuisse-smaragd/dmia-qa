@@ -24,10 +24,11 @@ class Model:
             raise ValueError()
         raw_result = self.__compute_similarities(text)
         print(raw_result)
-        if not self.__results_have_enough_similarity(raw_result):
+        # only takes first model result from here
+        if not self.__results_have_enough_similarity(raw_result[0]):
             print("not enough similarity")
             raise NotImplementedError()
-        result = self.__answer_max_vote(raw_result)
+        result = self.__answer_max_vote(raw_result[0])
         return result
 
     def initialize_models(self):
@@ -58,7 +59,7 @@ class Model:
         return user_question_emb
 
     @staticmethod
-    def __get_nearest_neighbour(collection, user_question_emb, n_results=1):
+    def __get_nearest_neighbour(collection, user_question_emb, n_results=5):
         result = collection.query(
             query_embeddings=user_question_emb.tolist(), n_results=n_results
         )
@@ -68,11 +69,13 @@ class Model:
         results = []
         for index, (name, model) in enumerate(self.models):
             user_question_emb = self.__embed_user_question(model, user_question)
-            result = self.__get_nearest_neighbour(
+            query_result = self.__get_nearest_neighbour(
                 self.collections[index], user_question_emb
             )
-            results.append(result)
-        return self.__restructure_dict(results)
+
+            results.append(query_result)
+
+        return results
 
     @staticmethod
     def __restructure_dict(dict_to_structure):
@@ -95,15 +98,15 @@ class Model:
 
     def __answer_max_vote(self, result):
         filtered_questions = []
-        for id in result["ids"]:
+        for id in result["ids"][0]:
             for question in self.questions:
                 if question.id == id:
                     filtered_questions.append(question)
         return self.__get_most_common_attribute(filtered_questions, "answer")
 
     @staticmethod
-    def __get_most_common_attribute(objects, attribute):
-        attribute_values = [getattr(obj, attribute) for obj in objects]
+    def __get_most_common_attribute(questions, attribute):
+        attribute_values = [getattr(obj, attribute) for obj in questions]
         attribute_counts = Counter(attribute_values)
         most_common_attribute = attribute_counts.most_common(1)[0][0]
         return most_common_attribute
@@ -111,7 +114,7 @@ class Model:
     @staticmethod
     def __results_have_enough_similarity(raw_result):
         has_enough_similarity = True
-        distances = raw_result["distances"]
+        distances = raw_result["distances"][0]
         if min(distances) > 0.7:
             has_enough_similarity = False
         return has_enough_similarity

@@ -27,6 +27,6 @@ def predict():
 if __name__ == "__main__":
     model = Model()
     # for production use
-    serve(app, host="0.0.0.0", port=5000)
+    # serve(app, host="0.0.0.0", port=5000)
     # for development use
-    # app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=True)
