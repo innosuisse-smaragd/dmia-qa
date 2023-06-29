@@ -15,7 +15,7 @@ def read_csv(file_path):
         csv_reader = csv.reader(file)
 
         # Skip the header row
-        # header = next(csv_reader)
+        header = next(csv_reader)
 
         # Create a list to store objects
         object_list = []
