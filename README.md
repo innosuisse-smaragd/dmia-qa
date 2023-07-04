@@ -4,9 +4,9 @@ DMIA-QA is an application that maps user questions to a predefined collection of
 
 The application is based on the sentence-transformers library. It creates embeddings for all predefined questions. It then calculates the cosine distance between the embedded user question and all predefined questions.
 
-A highest-vote approach is followed, enabling the specification of multiple models to be used. The system is designed that each model might output a different variation of a question, however referring to the same answer.
+Among the top 5 similar questions variations, either the most common answer or a unique answer to the most similar question is looked up and returned.
 
-Currently, an answer is provided only if the distance is smaller than 0.7 and the user input is at least four words long.
+Currently, an answer is provided only if the distance (cosine similarity) is smaller than 0.7 and the user input is at least four words long.
 
 ## Installation
 
@@ -19,7 +19,9 @@ docker run -dp <HOST-PORT>:5000 dmia-qa
 
 ## Usage
 
-Make a HTTP POST request to /answer containing the user question to be mapped as raw json body:
+### GET answer
+
+Make a HTTP GET request to /answer containing the user question to be mapped as raw json body. Choose application/json as Content-Type header.
 
 ```json
 {
@@ -33,6 +35,23 @@ The application returns the answer to the most similar predefined question (HTTP
 
 - 400 BAD REQUEST: The input is too short (minimum of four words).
 - 501 NOT IMPLEMENTED: There was no question found which was similar enough to the user input
+
+### POST wrong answer to question
+
+Make a HTTP POST request to /improve containing the user question and the wrong answer as a raw json body. Choose application/json as Content-Type header.
+
+```json
+{
+  "question": "Tut eine Mammografie weh?",
+  "wrongAnswer": "Eine Mammografie ist nicht kostenlos"
+}
+```
+
+The application returns HTTP 200 OK.
+
+#### Error responses
+
+Not applicable
 
 ## Open issues
 
