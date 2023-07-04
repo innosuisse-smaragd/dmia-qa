@@ -31,6 +31,12 @@ class Model:
         result = self.__answer_max_vote(raw_result[0])
         return result
 
+    def save_wrong_prediction(self, text):
+        with open("./raw/wrongClassifications.csv", "a") as file:
+            string = text["question"] + ", " + text["wrongAnswer"] + "\n"
+            file.write(string)
+        return
+
     def initialize_models(self):
         for model_name in self.model_names:
             model = SentenceTransformer(model_name)

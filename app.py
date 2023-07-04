@@ -7,7 +7,7 @@ from waitress import serve
 app = Flask(__name__)
 
 
-@app.route("/answer", methods=["POST"])
+@app.route("/answer", methods=["GET"])
 def predict():
     args = request.json
     try:
@@ -22,6 +22,13 @@ def predict():
     except NotImplementedError:
         abort(501, "No answer found for this question.")
     return r
+
+
+@app.route("/improve", methods=["POST"])
+def improve():
+    args = request.json
+    model.save_wrong_prediction(args)
+    return "OK", 200
 
 
 if __name__ == "__main__":
