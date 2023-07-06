@@ -26,7 +26,7 @@ class Model:
         print(raw_result)
         # only takes first model result from here
         if not self.__results_have_enough_similarity(raw_result[0]):
-            print("not enough similarity")
+            self.__save_unanswerable_question(text)
             raise NotImplementedError()
         result = self.__answer_max_vote(raw_result[0])
         return result
@@ -34,6 +34,14 @@ class Model:
     def save_wrong_prediction(self, text):
         with open("./raw/wrongClassifications.csv", "a") as file:
             string = text["question"] + ", " + text["wrongAnswer"] + "\n"
+            file.write(string)
+        return
+
+    @staticmethod
+    def __save_unanswerable_question(question):
+        print("qeuestion", question)
+        with open("./raw/missingAnswers.txt", "a") as file:
+            string = question + "\n"
             file.write(string)
         return
 
