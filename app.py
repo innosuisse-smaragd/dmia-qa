@@ -7,7 +7,7 @@ from waitress import serve
 app = Flask(__name__)
 
 
-@app.route("/answer", methods=["GET"])
+@app.route("/answer", methods=["POST"])
 def predict():
     args = request.json
     try:
