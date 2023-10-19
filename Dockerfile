@@ -1,6 +1,6 @@
 # Use the official Python image as the base image
 #FROM conda/miniconda3
-FROM continuumio/anaconda3
+FROM continuumio/anaconda3:2023.09-0
 
 # Set the working directory inside the container
 WORKDIR /app
