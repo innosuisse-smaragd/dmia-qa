@@ -1,5 +1,6 @@
 # Use the official Python image as the base image
 #FROM conda/miniconda3
+#FROM --platform=linux/amd64 continuumio/anaconda3
 FROM continuumio/anaconda3
 
 # Set the working directory inside the container
@@ -15,7 +16,7 @@ COPY environment.yml .
 COPY requirements.txt .
 
 # Create a Conda environment and activate it
-RUN conda env create -f environment.yml
+RUN conda env create --verbose -f environment.yml
 #RUN conda install pytorch::pytorch -c pytorch 
 #RUN pip install -r requirements.txt
 RUN echo "source activate dmiaqa" > ~/.bashrc
